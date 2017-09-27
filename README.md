@@ -1,4 +1,4 @@
-For C:
+For C: Compile- gcc diffusion.c Run- a.out
 
 For C#:
 
