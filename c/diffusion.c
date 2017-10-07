@@ -4,6 +4,7 @@
 #include <math.h>
 #include <time.h>
 #define mval(MEM,i,j,k) MEM[i*M*M+j*M+k]
+void diffuse(double* C, int M, int room, double diff, int urms);
 int main(int argc, char** argv)
 {
       //Variable declarations
@@ -27,12 +28,24 @@ int main(int argc, char** argv)
                   }
             }
       }
+      diffuse(C,M,room,diff,urms);  //Calls the method diffuse
+      //Calculating the CPU and wall time and printing out
+      end = clock();
+      final = (double) (end - start) / CLOCKS_PER_SEC;
+      printf("CPU time: %.2f\n", final);
+      printf("Wall Clock time: %.2f\n", (double) (time(NULL) - wstart));
+      printf("The last array element is %f\n", C[M*M*M-1]);
+      free(C);
+}
+//Method to go through the array and diffuse the box
+void diffuse(double* C, int M, int room, double diff, int urms)
+{
       //More variables 
       C[0,0,0] = 1.0 * pow(10,21);
       double tstep = (double) (room / urms) / M;
       double height = (double) room / M;
       double tacc = 0.0;
-      double min = mval(C,0,0,1);
+      double min = C[0,0,1];
       double max = C[0,0,0];
       double avg = min / max;
       double dC = C[0,0,1] - C[0,0,0];
@@ -40,17 +53,17 @@ int main(int argc, char** argv)
       while(avg <= 0.99)
       {
             tacc = tacc + tstep;
-            for(i = 0; i < M; i++)
+            for(int i = 0; i < M; i++)
             {
-                  for(l = 0; l < M; l++)
+                  for(int j = 0; j < M; j++)
                   {
-                        for(j = 0; j < M; j++)
+                        for(int k = 0; k < M; k++)
                         {
-                              for(m = 0; m < M; m++)
+                              for(int l = 0; l < M; l++)
                               {
-                                    for(k = 0; k < M; k++)
+                                    for(int m = 0; m < M; m++)
                                     {
-                                          for(n = 0; n < M; n++)
+                                          for(int n = 1; n < M; n++)
                                           {
                                                 mval(C,i,j,k) = (diff * (mval(C,l,m,n) - mval(C,i,j,k)) * tstep) / (height * height);
                                                 mval(C,i,j,k) = mval(C,i,j,k) + (C[M*M*M-1] - dC);
@@ -64,11 +77,4 @@ int main(int argc, char** argv)
             }
             avg = min / max;
       }
-      //Calculating the CPU and wall time and printing out
-      end = clock();
-      final = (double) (end - start) / CLOCKS_PER_SEC;
-      printf("CPU time: %.2f\n", final);
-      printf("Wall Clock time: %.2f\n", (double) (time(NULL) - wstart));
-      printf("The last array element is %f\n", C[M*M*M-1]);
-      free(C);
 }
