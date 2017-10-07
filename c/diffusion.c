@@ -42,6 +42,7 @@ void diffuse(double* C, int M, int room, double diff, int urms)
 {
       //More variables 
       C[0,0,0] = 1.0 * pow(10,21);
+      int i, j, k, l, m, n;
       double tstep = (double) (room / urms) / M;
       double height = (double) room / M;
       double tacc = 0.0;
@@ -53,22 +54,23 @@ void diffuse(double* C, int M, int room, double diff, int urms)
       while(avg <= 0.99)
       {
             tacc = tacc + tstep;
-            for(int i = 0; i < M; i++)
+            for(i = 0; i < M; i++)
             {
-                  for(int j = 0; j < M; j++)
+                  for(j = 0; j < M; j++)
                   {
-                        for(int k = 0; k < M; k++)
+                        for(k = 0; k < M; k++)
                         {
-                              for(int l = 0; l < M; l++)
+                              for(l = 0; l < M; l++)
                               {
-                                    for(int m = 0; m < M; m++)
+                                    for(m = 0; m < M; m++)
                                     {
-                                          for(int n = 1; n < M; n++)
+                                          for(n = 1; n < M; n++)
                                           {
-                                                mval(C,i,j,k) = (diff * (mval(C,l,m,n) - mval(C,i,j,k)) * tstep) / (height * height);
-                                                mval(C,i,j,k) = mval(C,i,j,k) + (C[M*M*M-1] - dC);
-                                                mval(C,l,m,n) = mval(C,l,m,n) - (C[M*M*M-1] - dC);
-                                                min = C[l,m,n];
+                                                C[i,j,k] = (diff * (C[l,m,n] - C[i,j,k]) * tstep) / (height * height);
+                                                C[i,j,k] = C[i,j,k] + (C[l,m,n] - C[i,j,k]);
+                                                C[l,m,n] = C[l,m,n] - (C[l,m,n] - C[i,j,k]);
+                                                min = C[i,j,k];
+                                                printf("%f\n",min);
                                           }
                                     }
                               }
@@ -76,5 +78,6 @@ void diffuse(double* C, int M, int room, double diff, int urms)
                   }
             }
             avg = min / max;
+            printf("%f\n",avg);
       }
 }
