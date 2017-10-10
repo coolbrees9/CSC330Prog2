@@ -2,6 +2,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+
+// C Code checked on 10/10/17 for mass consistency
+
 void diffuse(double*** C, int M);
 int main(int argc, char** argv)
 {
