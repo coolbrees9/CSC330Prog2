@@ -6,10 +6,10 @@ void diffuse(double*** C, int M);
 int main(int argc, char** argv)
 {
       //Variable declarations
-      int M = 10;
+      const int M = 10;
       int i,j,k;
-      //Makes and zeroes the array out
-      double*** C = malloc(M*sizeof(double**));
+      //Makes the array into cube form
+      double ***C = malloc(M*sizeof(double**));
       for(i = 0; i < M; i++)
       {
             C[i] = malloc(M*sizeof(double*));
@@ -18,14 +18,14 @@ int main(int argc, char** argv)
                   C[i][j] = malloc(M*sizeof(double));
             }
       }
-      //Makes the array into cube form
+      //Zeroes out the array
       for(i = 0; i < M; i++)
       {
             for(j = 0; j < M; j++)
             {
                   for(k = 0; k < M; k++)
                   {
-                        C[i][j][k] = i*M*M + j*M + k + 1.0;
+                        C[i][j][k] = 0.0;
                   }
             }
       }
@@ -46,9 +46,9 @@ void diffuse(double*** C, int M)
       double tacc = 0.0;
       double ratio = 0.0;
       double sum = 0.0;
-      double dC = (diff * tstep) / (height * height);
+      double dC = diff * tstep / (height * height);
       //Loop that checks if the boxes are not all equal
-      while(ratio < 0.99)
+      do
       {
             for(int i = 0; i < M; i++)
             {
@@ -64,7 +64,7 @@ void diffuse(double*** C, int M)
                                           {
                                                 //Checks all of the adjacent blocks from the current block
                                                 if(((i==l) && (j==m) && (k==n+1)) || ((i==l) && (j==m) && (k==n-1)) || ((i==l) && (j==m+1) && (k==n)) ||
-                                                            ((i==l) && (j==m-1) && (k==n)) || ((i==l+1) && (j==m) && (k==n)) || ((i==l-1) && (j==m) && (k==n)))
+                                                   ((i==l) && (j==m-1) && (k==n)) || ((i==l+1) && (j==m) && (k==n)) || ((i==l-1) && (j==m) && (k==n)))
                                                 {
                                                       double change = (C[i][j][k] - C[l][m][n]) * dC;
                                                       C[i][j][k] = C[i][j][k] - change;
@@ -98,8 +98,7 @@ void diffuse(double*** C, int M)
             /*printf("%f %f %f\n", tacc, ratio, C[0][0][0]);
               printf("%f\n", C[M-1][M-1][M-1]);
               printf("%f\n", sum);*/
-      }
+      } while(ratio <= 0.99);
       printf("Total sum is %f.\n", sum);
-      //printf("Total time steps are %f.\n", tstep);
       printf("Box completed in %f seconds.\n", tacc);
 }
