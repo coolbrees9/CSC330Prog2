@@ -1,6 +1,9 @@
 !Program that will diffuse an entire room with the given diffusion constant
 program diffusion
 !Using the already made 3D array from file cube_mem
+
+! Checked for mass consistency on 10/16/17
+
 USE cube_mem
 real(kind=8) :: cubesum
 integer :: mem_stat
