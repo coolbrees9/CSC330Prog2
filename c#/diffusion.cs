@@ -1,6 +1,8 @@
 //This program will diffuse a room with a given substance's diffusion constant
 using System;
 
+// C# checked on 10/15/17 
+
 public class MemTest
 {
       static public void Main()
