@@ -6,6 +6,6 @@ For Python: Compile and Run- diffusion.py
 
 For Fortran: Compile- gfortran diffusion.f90 cube_mem.f90 Run- a.out
 
-For Go:
+For Go: Compile and Run- go run diffusion.go
 
 For Lisp:
