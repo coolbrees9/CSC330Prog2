@@ -1,10 +1,12 @@
+//This program will diffuse a room with a given substance based on room and dimension size
 package main
 import "fmt"
 import "math"
 
 func main(){
       const M int = 10
-      var C[M][M][M] float64
+      var C[M][M][M] float64  //Makes a 3D array
+      //Zeroes out the array
       for i := 0; i < M; i++{
             for j := 0; j < M; j++{
                   for k := 0; k < M; k++{
@@ -12,6 +14,7 @@ func main(){
                   }
             }
       }
+      //Variable Declarations
       C[0][0][0] = 1.0e21
       var diff float64 = 0.175
       var room float64 = 5
@@ -21,7 +24,7 @@ func main(){
       var dC float64 = diff * tstep / (height * height)
       var tacc float64 = 0.0
       var ratio float64 = 0.0
-
+      //Loop that will go into every block and diffuse adjacent blocks
       for ratio <= 0.99{
             for i := 0; i < M; i++{
                   for j := 0; j < M; j++{
@@ -50,17 +53,17 @@ func main(){
             for i := 0; i < M; i++{
                   for j := 0; j < M; j++{
                         for k := 0; k < M; k++{
-                              maxval = math.Max(C[i][j][k], maxval)
-                              minval = math.Min(C[i][j][k], minval)
+                              maxval = math.Max(C[i][j][k], maxval)  //Finds whichever is greater
+                              minval = math.Min(C[i][j][k], minval)  //Finds whichever is smaller
                               sumval += C[i][j][k]
                         }
                   }
             }
             ratio = minval / maxval
 
-            fmt.Println(tacc, " ", ratio, " ", C[0][0][0])
+            /*fmt.Println(tacc, " ", ratio, " ", C[0][0][0])
             fmt.Println(C[M-1][M-1][M-1])
-            fmt.Println(sumval)
+            fmt.Println(sumval)*/
       }
       fmt.Println("Box diffused in ", tacc, " seconds.")
 }
