@@ -1,4 +1,7 @@
 //This program will diffuse a room with a given substance based on room and dimension size
+
+// Checked go on 10/21/17
+
 package main
 import "fmt"
 import "math"
