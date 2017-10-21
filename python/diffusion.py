@@ -1,6 +1,8 @@
-#!/usr/bin/python
+##!/usr/bin/python
 #This program will diffuse an entrie room based on its size and M
 import math
+
+# Python checked for consistency.  Code will run much faster if you can reduce the six inner loops down to three.
 
 M=10
 room=5.0
@@ -42,5 +44,6 @@ while (ratio <= 0.99):
       ratio=minval/maxval
       #print tacc, " ", ratio, " ", C[0][0][0]
       #print C[M-1][M-1][M-1]
-      #print sumval
+      
+      print sumval, ratio
 print "Box diffused in ", tacc, " seconds"
