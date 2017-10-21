@@ -1,4 +1,7 @@
 //This program will diffuse a room with a given substance based on room and dimension size
+
+// Checked go on 10/21/17
+
 package main
 import "fmt"
 import "math"
@@ -61,9 +64,9 @@ func main(){
             }
             ratio = minval / maxval
 
-            /*fmt.Println(tacc, " ", ratio, " ", C[0][0][0])
+            fmt.Println(tacc, " ", ratio, " ", C[0][0][0])
             fmt.Println(C[M-1][M-1][M-1])
-            fmt.Println(sumval)*/
+            fmt.Println(sumval)
       }
       fmt.Println("Box diffused in ", tacc, " seconds.")
 }
