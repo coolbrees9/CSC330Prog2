@@ -64,9 +64,9 @@ func main(){
             }
             ratio = minval / maxval
 
-            /*fmt.Println(tacc, " ", ratio, " ", C[0][0][0])
+            fmt.Println(tacc, " ", ratio, " ", C[0][0][0])
             fmt.Println(C[M-1][M-1][M-1])
-            fmt.Println(sumval)*/
+            fmt.Println(sumval)
       }
       fmt.Println("Box diffused in ", tacc, " seconds.")
 }
