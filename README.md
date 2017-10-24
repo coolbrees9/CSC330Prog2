@@ -8,4 +8,4 @@ For Fortran: Compile- gfortran diffusion.f90 cube_mem.f90 Run- a.out
 
 For Go: Compile and Run- go run diffusion.go
 
-For Lisp:
+For Lisp: Compile and Run- diffusion.lisp
