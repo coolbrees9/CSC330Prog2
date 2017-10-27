@@ -5,8 +5,8 @@
 (setf C (make-array '(5 5 5)))
 ;;;Variable declarations
 (defvar change)
-(defvar minval)
-(defvar maxval)
+(defvar minval 0.0)
+(defvar maxval 0.0)
 (defvar sumval)
 (defvar diff 0.175)
 (defvar rooms 5.0)
@@ -53,35 +53,24 @@
       (setf tacc(+ tacc tstep))
       ;;;Checks for mass consistency
       (setf sumval 0.0)
-      (setf minval (aref C 0 0 0))
-      (setf maxval (aref C 0 0 0))
+      (setf minval (aref C 0 0 0) )
+      (setf maxval (aref C 0 0 0) )
       ;(print minval)
       ;(print maxval)
       (dotimes (i M)
            (dotimes (j M)
                   (dotimes (k M)
-                        (if (> (aref C i j k) maxval)
-                        (progn
-                              (setf maxval (aref C i j k))
-                        )
-                        )
-                        (if (< (aref C i j k) minval)
-                        (progn
-                              (setf minval (aref C i j k))
-                        )
-                        )
-                        ;(setf maxval (max maxval (aref C i j k)))  ;Determines which is largest of the 2
-                        ;(setf minval (min minval (aref C i j k)))  ;Determines which is smallest of the 2
+                        (setf maxval (max maxval (aref C i j k)))  ;Determines which is largest of the 2
+                        (setf minval (min minval (aref C i j k)))  ;Determines which is smallest of the 2
                         (setf sumval(+ sumval (aref C i j k)))
                   )
             )
       )
       (setf cr (/ minval maxval) )
       ;;;Prints different values
-      ;(print tacc) 
-      (print cr) 
-      ;(print (aref C 0 0 0))
+      (format t "Time: ~,2d  Ratio: ~,2d  index: ~,2d ~%" tacc cr (aref C 0 0 0)) 
       ;(print (aref C (- M 1)(- M 1)(- M 1)))
       ;(print sumval)
+
 )
-(format t "Box diffused in ~,,2f" tacc " seconds ~%")
+(format t "Box diffused in ~,,2d seconds. ~%" tacc)
