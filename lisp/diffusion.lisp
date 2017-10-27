@@ -1,8 +1,8 @@
 #!/usr/bin/sbcl --script
 (defvar C)
-(defvar M 10)
+(defvar M 5)
 ;Makes a 3D array
-(setf C (make-array '(10 10 10)))
+(setf C (make-array '(5 5 5)))
 ;;;Variable declarations
 (defvar change)
 (defvar minval)
@@ -13,13 +13,18 @@
 (defvar urms 250.0)
 (defvar tstep (/ rooms urms M))
 (defvar height (/ rooms M))
-(defvar dC (/ (* diff tstep) (* height height)))
+(defvar dC (/ (* diff tstep) (* height height)) )
 (defvar tacc 0.0)
-(defvar cube_ratio 0.0)
-(setf (aref C 0 0 0)(expt 1 21)) ;Makes first element in cube 1e21
+(defvar cr 0.0)
+(setf (aref C 0 0 0) (* 1(expt 10 21))) ;Makes first element in cube 1e21
 (write-line "Beginning Box simulation...")
+;(print (aref C 0 0 0))
+;(print dC)
+;(print diff)
+;(print tstep)
+;(print height)
 ;Loop that checks when min and max value are equal
-(loop while (<= cube_ratio  0.99) do
+(loop while (<= cr  0.99)  do
       (dotimes (i M)
             (dotimes (j M)
                   (dotimes (k M)
@@ -33,9 +38,9 @@
                                            (and (= i (+ l 1)) (= j m) (= k n))
                                            (and (= i (- l 1)) (= j m) (= k n)))
                                                 (progn
-                                                      (setf change (* (- (aref C i j k)(aref C l m n)) dC))
-                                                      (setf (aref C i j k)(+ (aref C i j k)change))
-                                                      (setf (aref C l m n)(- (aref C l m n)change))
+                                                      (setf change (* (- (aref C i j k) (aref C l m n)) dC))
+                                                      (setf (aref C i j k) (- (aref C i j k)change))
+                                                      (setf (aref C l m n) (+ (aref C l m n)change))
                                                       ;(print "Made it into if statement")
                                                 )
                                           )
@@ -50,20 +55,33 @@
       (setf sumval 0.0)
       (setf minval (aref C 0 0 0))
       (setf maxval (aref C 0 0 0))
+      ;(print minval)
+      ;(print maxval)
       (dotimes (i M)
            (dotimes (j M)
                   (dotimes (k M)
-                        (setf maxval (max maxval (aref C i j k)))  ;Determines which is largest of the 2
-                        (setf minval (min minval (aref C i j k)))  ;Determines which is smallest of the 2
+                        (if (> (aref C i j k) maxval)
+                        (progn
+                              (setf maxval (aref C i j k))
+                        )
+                        )
+                        (if (< (aref C i j k) minval)
+                        (progn
+                              (setf minval (aref C i j k))
+                        )
+                        )
+                        ;(setf maxval (max maxval (aref C i j k)))  ;Determines which is largest of the 2
+                        ;(setf minval (min minval (aref C i j k)))  ;Determines which is smallest of the 2
                         (setf sumval(+ sumval (aref C i j k)))
-                        ;(print "Made it in mass consistency")
                   )
             )
       )
-      (setf cube_ratio (/ minval maxval))
+      (setf cr (/ minval maxval) )
       ;;;Prints different values
-      (print (format "%f %f %f" tacc cube_ratio (aref C 0 0 0)))
-      ;(write-line (aref C (- M 1)(- M 1)(- M 1)))
-      ;(write-line sumval)
+      ;(print tacc) 
+      (print cr) 
+      ;(print (aref C 0 0 0))
+      ;(print (aref C (- M 1)(- M 1)(- M 1)))
+      ;(print sumval)
 )
-;(write-line "Box diffused in " tacc " seconds")
+(format t "Box diffused in ~,,2f" tacc " seconds ~%")
