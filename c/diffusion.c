@@ -8,8 +8,15 @@
 void diffuse(double*** C, int M);
 int main(int argc, char** argv)
 {
+      const int M;
+      printf("What is the size of the box?\n");
       //Variable declarations
-      const int M = 10;
+      scanf("%d", &M);
+      if(M <= 0)
+      {
+            printf("Invalid number");
+            exit(0);
+      }
       int i,j,k;
       //Makes the array into cube form
       double ***C = malloc(M*sizeof(double**));
