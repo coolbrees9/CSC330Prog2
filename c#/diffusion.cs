@@ -7,7 +7,14 @@ public class MemTest
 {
       static public void Main()
       {
-            const int M = 10;
+            Console.WriteLine("What is the size of the box?");
+            //Variable declarations
+            int M = Convert.ToInt32(Console.ReadLine());  //Converts user input to int value for box size
+            if(M <= 0)
+            {
+                  Console.WriteLine("Invalid number");
+                  System.Environment.Exit(1);
+            }
             double[,,]C = new double [M,M,M]; //Creates the 3D array
             //Loop that zeroes out the array
             for(int i = 0; i < M; i++)
@@ -22,7 +29,6 @@ public class MemTest
             }
             Console.WriteLine("Beginning Diffusion process...");
             diffuse(C,M);  //Calls the method diffuse
-            //free(C);  //Empties the array to save space
       }
       //Method to go through the array and diffuse the box
       static void diffuse(double[,,] C, int M)
