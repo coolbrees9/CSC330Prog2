@@ -10,7 +10,7 @@ integer :: mem_stat
 
 print *, "How big is the cube?"
 read *, mdim  !Equals whatever the user inputs as the blocks
-
+print *, "Beginning Box Simulation..."
 call fill_cube  !Calls the fill_cube method 
 cubesum = sum(cube)
 print *, "Sum of the cube is ", cubesum
