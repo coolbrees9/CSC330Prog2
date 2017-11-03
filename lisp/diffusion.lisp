@@ -96,7 +96,7 @@
       ;;;Prints different values
       (format t "Time: ~,2d  Ratio: ~,2d  index: ~,2d ~%" tacc cuberatio (aref C 0 0 0)) 
       ;(print (aref C (- M 1)(- M 1)(- M 1)))
-      ;(print sumval)
+      (format t "Sum: ~,2d ~%" sumval)
 
 )
 (format t "Box diffused in ~,,2d seconds. ~%" tacc)
