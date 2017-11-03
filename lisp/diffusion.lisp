@@ -1,6 +1,8 @@
 #!/usr/bin/sbcl --script
 (defvar C)
-(defvar M 5)
+(write-line "What is the size of the box?")
+(defvar M)
+(setf M (read))
 ;Makes a 3D array
 (setf C (make-array (list M M M)))
 ;;;Variable declarations
