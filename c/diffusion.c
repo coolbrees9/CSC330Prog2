@@ -5,7 +5,7 @@
 
 // C Code checked on 10/10/17 for mass consistency
 
-void diffuse(double*** C, int M);
+void diffuse(double*** C, int M, int partition);
 int main(int argc, char** argv)
 {
       const int M;
@@ -16,6 +16,14 @@ int main(int argc, char** argv)
       {
             printf("Invalid number");
             exit(0);
+      }
+      int partition;
+      printf("Is there a partition? (0 for no, 1 for yes)\n");
+      scanf("%d", &partition);
+      if(partition != 1 && partition != 0)
+      {
+            printf("Partition will be turned off.\n");
+            partition = 0;
       }
       int i,j,k;
       //Makes the array into cube form
@@ -40,12 +48,17 @@ int main(int argc, char** argv)
             }
       }
       printf("Beginning Box Simulation...\n");
-      diffuse(C, M);  //Calls the method diffuse
+      diffuse(C, M, partition);  //Calls the method diffuse
       free(C);     //Empties C to save space
 }
 //Method to go through the array and diffuse the box
-void diffuse(double*** C, int M)
+void diffuse(double*** C, int M, int partition)
 {
+      int partsize;
+      if(partition == 1)
+      {
+            partsize = floor(M / 2);
+      }
       //More variables
       C[0][0][0] = 1.0 * pow(10,21);  //Makes first cell 1.0e21
       double room = 5.0;
@@ -57,6 +70,23 @@ void diffuse(double*** C, int M)
       double ratio = 0.0;
       double sum = 0.0;
       double dC = diff * tstep / (height * height);
+      double change;
+      if(partition == 1)
+      {
+            for(int i = 0; i < M; i++)
+            {
+                  for(int j = 0; j < M; j++)
+                  {
+                        for(int k = 0; k < M; k++)
+                        {
+                              if((i == partsize-1) && (j >= partsize-1))
+                              {
+                                    C[i][j][k] = -1.0;
+                              }
+                        }
+                  }
+            }      
+      }
       //Loop that checks if the boxes are not all equal
       do
       {
@@ -66,21 +96,44 @@ void diffuse(double*** C, int M)
                   {
                         for(int k = 0; k < M; k++)
                         {
-                              for(int l = 0; l < M; l++)
+                              if(C[i][j][k] != -1.0)
                               {
-                                    for(int m = 0; m < M; m++)
+                                    //Checks all of the adjacent blocks from the current block
+                                    if(i != 0 && C[i-1][j][k] != -1.0)
                                     {
-                                          for(int n = 0; n < M; n++)
-                                          {
-                                                //Checks all of the adjacent blocks from the current block
-                                                if(((i==l) && (j==m) && (k==n+1)) || ((i==l) && (j==m) && (k==n-1)) || ((i==l) && (j==m+1) && (k==n)) ||
-                                                   ((i==l) && (j==m-1) && (k==n)) || ((i==l+1) && (j==m) && (k==n)) || ((i==l-1) && (j==m) && (k==n)))
-                                                {
-                                                      double change = (C[i][j][k] - C[l][m][n]) * dC;
-                                                      C[i][j][k] = C[i][j][k] - change;
-                                                      C[l][m][n] = C[l][m][n] + change;
-                                                }
-                                          }
+                                          change=(C[i][j][k]-C[i-1][j][k])*dC;
+                                          C[i][j][k]=C[i][j][k]-change;
+                                          C[i-1][j][k]=C[i-1][j][k]+change;
+                                    }
+                                    if(j != 0 && C[i][j-1][k] != -1.0)
+                                    {
+                                          change=(C[i][j][k]-C[i][j-1][k])*dC;
+                                          C[i][j][k]=C[i][j][k]-change;
+                                          C[i][j-1][k]=C[i][j-1][k]+change;
+                                    }
+                                    if(k != 0 && C[i][j][k-1] != -1.0)
+                                    {
+                                          change=(C[i][j][k]-C[i][j][k-1])*dC;
+                                          C[i][j][k]=C[i][j][k]-change;
+                                          C[i][j][k-1]=C[i][j][k-1]+change;
+                                    }
+                                    if(i != M-1 && C[i+1][j][k] != -1.0)
+                                    {
+                                          change=(C[i][j][k]-C[i+1][j][k])*dC;
+                                          C[i][j][k]=C[i][j][k]-change;
+                                          C[i+1][j][k]=C[i+1][j][k]+change;
+                                    }
+                                    if(j != M-1 && C[i][j+1][k] != -1.0)
+                                    {
+                                          change=(C[i][j][k]-C[i][j+1][k])*dC;
+                                          C[i][j][k]=C[i][j][k]-change;
+                                          C[i][j+1][k]=C[i][j+1][k]+change;
+                                    }
+                                    if(k != M-1 && C[i][j][k+1] != -1.0)
+                                    {
+                                          change=(C[i][j][k]-C[i][j][k+1])*dC;
+                                          C[i][j][k]=C[i][j][k]-change;
+                                          C[i][j][k+1]=C[i][j][k+1]+change;
                                     }
                               }
                         }
@@ -97,17 +150,20 @@ void diffuse(double*** C, int M)
                   {
                         for(int k = 0; k < M; k++)
                         {
-                              maxc = fmax(C[i][j][k], maxc);
-                              minc = fmin(C[i][j][k], minc);
-                              sum += C[i][j][k];
+                              if(C[i][j][k] != -1.0)
+                              {
+                                    maxc = fmax(C[i][j][k], maxc);
+                                    minc = fmin(C[i][j][k], minc);
+                                    sum += C[i][j][k];
+                              }
                         }
                   }
             }
             ratio = minc / maxc;      //Sees if min and max are equal in order to end while loop
             //Prints the different variable types in loop
-            /*printf("%f %f %f\n", tacc, ratio, C[0][0][0]);
+              printf("%f %f %f\n", tacc, ratio, C[0][0][0]);
               printf("%f\n", C[M-1][M-1][M-1]);
-              printf("%f\n", sum);*/
+              printf("%f\n", sum);
       } while(ratio <= 0.99);
       printf("Total sum is %f.\n", sum);
       printf("Box completed in %f seconds.\n", tacc);
