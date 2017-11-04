@@ -1,4 +1,5 @@
 #!/usr/bin/sbcl --script
+;Lisp checked for mass consistency on 11/4/17
 (defvar C)
 (write-line "What is the size of the box?")
 (defvar M)
