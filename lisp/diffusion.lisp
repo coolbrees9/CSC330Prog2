@@ -1,9 +1,21 @@
 #!/usr/bin/sbcl --script
 ;Lisp checked for mass consistency on 11/4/17
 (defvar C)
+;Sets the box size to user input
 (write-line "What is the size of the box?")
 (defvar M)
 (setf M (read))
+;Asks and sets partition based on user input
+(write-line "Is there a partition? (0 for no, 1 for yes)")
+(defvar partition)
+(setf partition (read))
+;Checks if user inputted either 1 or 0 for partition
+(if (and (/= partition 0)(/= partition 1))
+      (progn
+            (write-line "Partition will be set to 0")
+            (setf partition 0)
+      )
+)
 ;Makes a 3D array
 (setf C (make-array (list M M M)))
 ;;;Variable declarations
@@ -17,9 +29,23 @@
 (defvar dC (/ (* diff tstep) (* height height) ) )
 (defvar tacc 0.0)
 (defvar cuberatio 0.0)
+(defvar partsize (/ M 2))
 (setf (aref C 0 0 0) (* 1(expt 10 21))) ;Makes first element in cube 1e21
 (defvar minval (aref C 0 0 0))
 (defvar maxval (aref C 0 0 0))
+(if (eq partition 1)
+      (progn
+            (dotimes (i M)
+                  (dotimes (j M)
+                        (dotimes (k M)
+                              (if (and (eq i (- partsize 1))(>= j (- partsize 1)))
+                                    (setf (aref C i j k) -1.0)
+                              )
+                        )
+                  )
+            )
+      )
+)
 (write-line "Beginning Box simulation...")
 ;(print (aref C 0 0 0))
 ;(print minval)
@@ -27,52 +53,56 @@
 ;(print diff)
 ;(print tstep)
 ;(print height)
-;Loop that checks when min and max value are equal
 
+;Loop that checks when min and max value are equal
 (loop while (<= cuberatio  0.99)  do
       (dotimes (i M)
             (dotimes (j M)
                   (dotimes (k M)
-                        (if (/= i 0)
+                        (if (/= (aref C i j k) -1.0)
                         (progn
-                              (setf change (* dC(- (aref C i j k)(aref C (- i 1) j k))))
-                              (setf (aref C i j k)(- (aref C i j k)change))
-                              (setf (aref C (- i 1) j k)(+ (aref C (- i 1) j k)change))
-                        )
-                        )
-                        (if (/= j 0)
-                        (progn
-                              (setf change (* dC(- (aref C i j k)(aref C i (- j 1) k))))
-                              (setf (aref C i j k)(- (aref C i j k)change))
-                              (setf (aref C i (- j 1) k)(+ (aref C i (- j 1) k)change))
-                        )
-                        )
-                        (if (/= k 0)
-                        (progn
-                              (setf change (* dC(- (aref C i j k)(aref C i j (- k 1)))))
-                              (setf (aref C i j k)(- (aref C i j k)change))
-                              (setf (aref C i j (- k 1))(+ (aref C i j (- k 1))change))
-                        )
-                        )
-                        (if (/= i (- M 1))
-                        (progn
-                              (setf change (* dC(- (aref C i j k)(aref C (+ i 1) j k))))
-                              (setf (aref C i j k)(- (aref C i j k)change))
-                              (setf (aref C (+ i 1) j k)(+ (aref C (+ i 1) j k)change))
-                        )
-                        )
-                        (if (/= j (- M 1))
-                        (progn
-                              (setf change (* dC(- (aref C i j k)(aref C i (+ j 1) k))))
-                              (setf (aref C i j k)(- (aref C i j k)change))
-                              (setf (aref C i (+ j 1) k)(+ (aref C i (+ j 1) k)change))
-                        )
-                        )
-                        (if (/= k (- M 1))
-                        (progn
-                              (setf change (* dC(- (aref C i j k)(aref C i j (+ k 1)))))
-                              (setf (aref C i j k)(- (aref C i j k)change))
-                              (setf (aref C i j (+ k 1))(+ (aref C i j (+ k 1))change))
+                              (if (and (/= i 0) (/= (aref C (- i 1) j k) -1.0))
+                              (progn
+                                    (setf change (* dC(- (aref C i j k)(aref C (- i 1) j k))))
+                                    (setf (aref C i j k)(- (aref C i j k)change))
+                                    (setf (aref C (- i 1) j k)(+ (aref C (- i 1) j k)change))
+                              )
+                              )
+                              (if (and (/= j 0) (/= (aref C i (- j 1) k) -1.0))
+                              (progn
+                                    (setf change (* dC(- (aref C i j k)(aref C i (- j 1) k))))
+                                    (setf (aref C i j k)(- (aref C i j k)change))
+                                    (setf (aref C i (- j 1) k)(+ (aref C i (- j 1) k)change))
+                              )
+                              )
+                              (if (and (/= k 0)(/= (aref C i j (- k 1)) -1.0))
+                              (progn
+                                    (setf change (* dC(- (aref C i j k)(aref C i j (- k 1)))))
+                                    (setf (aref C i j k)(- (aref C i j k)change))
+                                    (setf (aref C i j (- k 1))(+ (aref C i j (- k 1))change))
+                              )
+                              )
+                              (if (and (/= i (- M 1))(/= (aref C (+ i 1) j k) -1.0))
+                              (progn
+                                    (setf change (* dC(- (aref C i j k)(aref C (+ i 1) j k))))
+                                    (setf (aref C i j k)(- (aref C i j k)change))
+                                    (setf (aref C (+ i 1) j k)(+ (aref C (+ i 1) j k)change))
+                              )
+                              )
+                              (if (and (/= j (- M 1))(/= (aref C i (+ j 1) k) -1.0))
+                              (progn
+                                    (setf change (* dC(- (aref C i j k)(aref C i (+ j 1) k))))
+                                    (setf (aref C i j k)(- (aref C i j k)change))
+                                    (setf (aref C i (+ j 1) k)(+ (aref C i (+ j 1) k)change))
+                              )
+                              )
+                              (if (and (/= k (- M 1))(/= (aref C i j (+ k 1)) -1.0))
+                              (progn
+                                    (setf change (* dC(- (aref C i j k)(aref C i j (+ k 1)))))
+                                    (setf (aref C i j k)(- (aref C i j k)change))
+                                    (setf (aref C i j (+ k 1))(+ (aref C i j (+ k 1))change))
+                              )
+                              )
                         )
                         )
                   )
@@ -87,11 +117,13 @@
       (dotimes (i M)
            (dotimes (j M)
                   (dotimes (k M)
-                        (setf maxval (max maxval (aref C i j k)))  ;Determines which is largest of the 2
-                        (setf minval (min minval (aref C i j k)))  ;Determines which is smallest of the 2
-                        (setf sumval (+ sumval (aref C i j k)))
-                        ;(print minval)
-                        ;(print maxval)
+                        (if (/= (aref C i j k) -1.0)
+                        (progn
+                              (setf maxval (max maxval (aref C i j k)))  ;Determines which is largest of the 2
+                              (setf minval (min minval (aref C i j k)))  ;Determines which is smallest of the 2
+                              (setf sumval (+ sumval (aref C i j k)))
+                        )
+                        )
                   )
             )
       )
