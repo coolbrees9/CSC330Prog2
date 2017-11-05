@@ -7,6 +7,9 @@ import "fmt"
 import "math"
 
 func main(){
+      var temp float64 = 10.0
+      fmt.Println("How big is the box?")
+      fmt.Scan(&temp)
       const M int = 10
       var C[M][M][M] float64  //Makes a 3D array
       //Zeroes out the array
@@ -17,6 +20,10 @@ func main(){
                   }
             }
       }
+      //Sees if user wants a partition
+      var partition int = 0
+      fmt.Println("Is there a partition? (0 for no, 1 for yes)")
+      fmt.Scan(&partition)
       //Variable Declarations
       C[0][0][0] = 1.0e21
       var diff float64 = 0.175
@@ -27,22 +34,60 @@ func main(){
       var dC float64 = diff * tstep / (height * height)
       var tacc float64 = 0.0
       var ratio float64 = 0.0
+      var change float64
+      var partsize int = int(math.Floor(temp / 2))
+      fmt.Println("Beginning Box simulation...")
+      if partition != 1 && partition != 0{
+            fmt.Println("Partition will be set to 0")
+            partition = 0
+      }
+      if partition == 1{
+            for i := 0; i < M; i++{
+                  for j := 0; j < M; j++{
+                        for k := 0; k < M; k++{
+                              if i == partsize-1 && j >= partsize-1{
+                                    C[i][j][k] = -1.0
+                              }
+                        }
+                  }
+            }
+      }
       //Loop that will go into every block and diffuse adjacent blocks
       for ratio <= 0.99{
             for i := 0; i < M; i++{
                   for j := 0; j < M; j++{
                         for k := 0; k < M; k++{
-                              for l := 0; l < M; l++{
-                                    for m := 0; m < M; m++{
-                                          for n := 0; n < M; n++{
-                                                if( ((i==l) && (j==m) && (k==n+1)) || ((i==l) && (j==m) && (k==n-1)) ||
-                                                    ((i==l) && (j==m+1) && (k==n)) || ((i==l) && (j==m-1) && (k==n)) ||
-                                                    ((i==l+1) && (j==m) && (k==n)) || ((i==l-1) && (j==m) && (k==n)) ){
-                                                      var change float64 = (C[i][j][k] - C[l][m][n]) * dC
-                                                      C[i][j][k] = C[i][j][k] - change
-                                                      C[l][m][n] = C[l][m][n] + change
-                                                }
-                                          }
+                              if C[i][j][k] != -1.0{
+                                    //Checks all of the adjacent blocks from the current block
+                                    if i != 0 && C[i-1][j][k] != -1.0{
+                                          change=(C[i][j][k]-C[i-1][j][k])*dC
+                                          C[i][j][k]=C[i][j][k]-change
+                                          C[i-1][j][k]=C[i-1][j][k]+change
+                                    }
+                                    if j != 0 && C[i][j-1][k] != -1.0{
+                                          change=(C[i][j][k]-C[i][j-1][k])*dC
+                                          C[i][j][k]=C[i][j][k]-change
+                                          C[i][j-1][k]=C[i][j-1][k]+change
+                                    }
+                                    if k != 0 && C[i][j][k-1] != -1.0{
+                                          change=(C[i][j][k]-C[i][j][k-1])*dC
+                                          C[i][j][k]=C[i][j][k]-change
+                                          C[i][j][k-1]=C[i][j][k-1]+change
+                                    }
+                                    if i != M-1 && C[i+1][j][k] != -1.0{
+                                          change=(C[i][j][k]-C[i+1][j][k])*dC
+                                          C[i][j][k]=C[i][j][k]-change
+                                          C[i+1][j][k]=C[i+1][j][k]+change
+                                    }
+                                    if j != M-1 && C[i][j+1][k] != -1.0{
+                                          change=(C[i][j][k]-C[i][j+1][k])*dC
+                                          C[i][j][k]=C[i][j][k]-change
+                                          C[i][j+1][k]=C[i][j+1][k]+change
+                                    }
+                                    if k != M-1 && C[i][j][k+1] != -1.0{
+                                          change=(C[i][j][k]-C[i][j][k+1])*dC
+                                          C[i][j][k]=C[i][j][k]-change
+                                          C[i][j][k+1]=C[i][j][k+1]+change
                                     }
                               }
                         }
@@ -56,16 +101,18 @@ func main(){
             for i := 0; i < M; i++{
                   for j := 0; j < M; j++{
                         for k := 0; k < M; k++{
-                              maxval = math.Max(C[i][j][k], maxval)  //Finds whichever is greater
-                              minval = math.Min(C[i][j][k], minval)  //Finds whichever is smaller
-                              sumval += C[i][j][k]
+                              if C[i][j][k] != -1.0{
+                                    maxval = math.Max(C[i][j][k], maxval)  //Finds whichever is greater
+                                    minval = math.Min(C[i][j][k], minval)  //Finds whichever is smaller
+                                    sumval += C[i][j][k]
+                              }
                         }
                   }
             }
             ratio = minval / maxval
 
             fmt.Println(tacc, " ", ratio, " ", C[0][0][0])
-            fmt.Println(C[M-1][M-1][M-1])
+            //fmt.Println(C[M-1][M-1][M-1])
             fmt.Println(sumval)
       }
       fmt.Println("Box diffused in ", tacc, " seconds.")
