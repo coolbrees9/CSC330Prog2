@@ -45,7 +45,7 @@ SUBROUTINE fill_cube
       if(partition .eq. 1) then
             partsize = mdim / 2
       endif
-      if(partition .ne. 1 .or. partition .ne. 0) then
+      if(partition .ne. 1 .and. partition .ne. 0) then
             print *, "Partition will be set to 0"
             partition = 0
       end if
