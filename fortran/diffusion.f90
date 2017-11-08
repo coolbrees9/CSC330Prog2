@@ -120,9 +120,9 @@ do while(ratio <= 0.99)
             end do
       end do
       ratio = minc / maxc  !Determines if cube is finished
-      print *, tacc, " ", ratio, " ", cube(1,1,1)
+      !print *, tacc, " ", ratio, " ", cube(1,1,1)
       !print *, cube(mdim-1,mdim-1,mdim-1)
-      print *, sumval
+      !print *, sumval
 end do
 !Stops counting the cpu time
 call cpu_time(finish)
