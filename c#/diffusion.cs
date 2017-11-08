@@ -1,5 +1,6 @@
 //This program will diffuse a room with a given substance's diffusion constant
 using System;
+using System.Diagnostics;
 
 // C# checked on 10/15/17 
 
@@ -40,6 +41,9 @@ public class MemTest
       //Method to go through the array and diffuse the box
       static void diffuse(double[,,] C, int M, int partition)
       {
+            //Creates a stopwatch to get real time
+            Stopwatch wall = new Stopwatch();
+            wall.Start();
             //More variables
             decimal partsize = 0;
             if(partition == 1)
@@ -135,8 +139,8 @@ public class MemTest
                               {
                                     if(C[i,j,k] != -1.0)
                                     {
-                                          maxc = Math.Max(C[i,j,k], maxc);
-                                          minc = Math.Min(C[i,j,k], minc);
+                                          maxc = Math.Max(C[i,j,k], maxc); //Calculates which is greater than the 2
+                                          minc = Math.Min(C[i,j,k], minc); //Calculates which is smaller than the 2
                                           sum += C[i,j,k];
                                     }
                               }
@@ -148,7 +152,12 @@ public class MemTest
                   //Console.WriteLine(C[M-1,M-1,M-1]);
                   Console.WriteLine(sum);
             } while(ratio <= 0.99);
+            //Stops the stopwatch
+            wall.Stop();
+            //Sets time equal to the time from start to stop
+            TimeSpan time = wall.Elapsed;
             Console.WriteLine("Total sum is " + sum);
             Console.WriteLine("Box completed in " + tacc + " seconds.");
+            Console.WriteLine("Wall Time = " + time);
       }
 }
