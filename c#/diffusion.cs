@@ -42,8 +42,8 @@ public class MemTest
       static void diffuse(double[,,] C, int M, int partition)
       {
             //Creates a stopwatch to get real time
-            Stopwatch wall = new Stopwatch();
-            wall.Start();
+            Stopwatch cpu = new Stopwatch();
+            cpu.Start();
             //More variables
             decimal partsize = 0;
             if(partition == 1)
@@ -148,16 +148,16 @@ public class MemTest
                   }
                   ratio = minc / maxc;      //Sees if min and max are equal in order to end while loop
                   //Prints the different variable types in loop
-                  Console.WriteLine(tacc + " " + ratio + " " + C[0,0,0]);
+                  //Console.WriteLine(tacc + " " + ratio + " " + C[0,0,0]);
                   //Console.WriteLine(C[M-1,M-1,M-1]);
-                  Console.WriteLine(sum);
+                  //Console.WriteLine(sum);
             } while(ratio <= 0.99);
             //Stops the stopwatch
-            wall.Stop();
+            cpu.Stop();
             //Sets time equal to the time from start to stop
-            TimeSpan time = wall.Elapsed;
+            TimeSpan time = cpu.Elapsed;
             Console.WriteLine("Total sum is " + sum);
             Console.WriteLine("Box completed in " + tacc + " seconds.");
-            Console.WriteLine("Wall Time = " + time);
+            Console.WriteLine("CPU Time = " + time);
       }
 }
