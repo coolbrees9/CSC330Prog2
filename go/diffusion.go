@@ -5,6 +5,7 @@
 package main
 import "fmt"
 import "math"
+import "time"
 
 func main(){
       var temp float64 = 10.0
@@ -24,6 +25,8 @@ func main(){
       var partition int = 0
       fmt.Println("Is there a partition? (0 for no, 1 for yes)")
       fmt.Scan(&partition)
+      //Starts the timer for CPU time
+      start := time.Now()
       //Variable Declarations
       C[0][0][0] = 1.0e21
       var diff float64 = 0.175
@@ -115,5 +118,8 @@ func main(){
             //fmt.Println(C[M-1][M-1][M-1])
             fmt.Println(sumval)
       }
+      //Sets wall equal to time since the start
+      wall := time.Since(start)
       fmt.Println("Box diffused in ", tacc, " seconds.")
+      fmt.Println("Wall time = ", wall)
 }
