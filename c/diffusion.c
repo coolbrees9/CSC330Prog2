@@ -2,12 +2,31 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#include <stddef.h>
+#include <sys/time.h>
+#include <time.h>
+
+double factor = 1.0e-6;
 
 // C Code checked on 10/10/17 for mass consistency
 
+//Code given from email that will calculate wall time
+double walltime_() 
+{
+    struct timeval tp;
+    int rtn;
+    double seconds;
+
+    rtn=gettimeofday(&tp, NULL);
+
+    seconds = tp.tv_sec + factor * tp.tv_usec;
+
+    return  seconds ; 
+}
 void diffuse(double*** C, int M, int partition);
 int main(int argc, char** argv)
 {
+      double wall;
       const int M;
       printf("What is the size of the box?\n");
       //Variable declarations
@@ -47,9 +66,13 @@ int main(int argc, char** argv)
                   }
             }
       }
+      //Starts the counting
+      wall = walltime_();
       printf("Beginning Box Simulation...\n");
       diffuse(C, M, partition);  //Calls the method diffuse
       free(C);     //Empties C to save space
+      wall= walltime_() - wall;
+      printf("Wall time = %f\n", wall);
 }
 //Method to go through the array and diffuse the box
 void diffuse(double*** C, int M, int partition)
