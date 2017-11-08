@@ -8,12 +8,11 @@ USE cube_mem
 real(kind=8) :: cubesum
 integer :: mem_stat
 integer :: partition
-
 print *, "How big is the cube?"
 read *, mdim  !Equals whatever the user inputs as the blocks
 call fill_cube  !Calls the fill_cube method 
-cubesum = sum(cube)
-print *, "Sum of the cube is ", cubesum
+!cubesum = sum(cube)
+!print *, "Sum of the cube is ", cubesum
 
 deallocate(cube, STAT=mem_stat)  !Frees up the cube
 if(mem_stat/=0.0)STOP "ERROR DEALLOCATING ARRAY"
@@ -28,9 +27,12 @@ SUBROUTINE fill_cube
       integer :: mem_stat
       real :: diff, room, urms, tstep, height, dC
       real :: tacc, ratio, sumval, maxc, minc, change
+      real :: start, finish
       print *, "Is there a partition? (0 for no, 1 for yes)"
       read *, partition  !Sees if user wants a partition or not
       print *, "Beginning Box simulation..."
+      !Starts counting the cpu time 
+      call cpu_time(start)
       diff = 0.175
       room = 5.0
       urms = 250.0
@@ -122,5 +124,9 @@ do while(ratio <= 0.99)
       !print *, cube(mdim-1,mdim-1,mdim-1)
       print *, sumval
 end do
+!Stops counting the cpu time
+call cpu_time(finish)
 print *, "Box finished in ", tacc, " seconds"
+print *, "Sum of the cube = ", sumval
+print *, "Wall time =",finish-start,"seconds."
 END SUBROUTINE fill_cube
