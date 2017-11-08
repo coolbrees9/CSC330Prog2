@@ -26,7 +26,7 @@ double walltime_()
 void diffuse(double*** C, int M, int partition);
 int main(int argc, char** argv)
 {
-      double wall;
+      double cpu;
       const int M;
       printf("What is the size of the box?\n");
       //Variable declarations
@@ -67,12 +67,12 @@ int main(int argc, char** argv)
             }
       }
       //Starts the counting
-      wall = walltime_();
+      cpu = walltime_();
       printf("Beginning Box Simulation...\n");
       diffuse(C, M, partition);  //Calls the method diffuse
       free(C);     //Empties C to save space
-      wall= walltime_() - wall;
-      printf("Wall time = %f\n", wall);
+      cpu = walltime_() - cpu;
+      printf("CPU time = %f\n", cpu);
 }
 //Method to go through the array and diffuse the box
 void diffuse(double*** C, int M, int partition)
@@ -184,9 +184,9 @@ void diffuse(double*** C, int M, int partition)
             }
             ratio = minc / maxc;      //Sees if min and max are equal in order to end while loop
             //Prints the different variable types in loop
-              printf("%f %f %f\n", tacc, ratio, C[0][0][0]);
-              printf("%f\n", C[M-1][M-1][M-1]);
-              printf("%f\n", sum);
+              //printf("%f %f %f\n", tacc, ratio, C[0][0][0]);
+              //printf("%f\n", C[M-1][M-1][M-1]);
+              //printf("%f\n", sum);
       } while(ratio <= 0.99);
       printf("Total sum is %f.\n", sum);
       printf("Box completed in %f seconds.\n", tacc);
