@@ -53,7 +53,7 @@
 ;(print diff)
 ;(print tstep)
 ;(print height)
-
+;(let (wall1 (get-internal-real-time)))
 ;Loop that checks when min and max value are equal
 (loop while (<= cuberatio  0.99)  do
       (dotimes (i M)
@@ -134,4 +134,6 @@
       (format t "Sum: ~,2d ~%" sumval)
 
 )
+;(let (wall2 (get-internal-real-time)))
 (format t "Box diffused in ~,,2d seconds. ~%" tacc)
+;(format t "Wall time =  ~f ~%" (/ (- wall2 wall1) internal-time-units-per-second))
