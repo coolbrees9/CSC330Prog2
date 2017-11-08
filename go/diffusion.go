@@ -113,13 +113,12 @@ func main(){
                   }
             }
             ratio = minval / maxval
-
-            fmt.Println(tacc, " ", ratio, " ", C[0][0][0])
+            //fmt.Println(tacc, " ", ratio, " ", C[0][0][0])
             //fmt.Println(C[M-1][M-1][M-1])
-            fmt.Println(sumval)
+            //fmt.Println(sumval)
       }
       //Sets wall equal to time since the start
-      wall := time.Since(start)
+      cpu := time.Since(start)
       fmt.Println("Box diffused in ", tacc, " seconds.")
-      fmt.Println("Wall time = ", wall)
+      fmt.Println("CPU time = ", cpu)
 }
