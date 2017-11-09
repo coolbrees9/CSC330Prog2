@@ -2,6 +2,7 @@
 #This program will diffuse an entrie room based on its size and M
 import math
 import sys
+import time
 
 # Python checked for consistency.  Code will run much faster if you can reduce the six inner loops down to three.
 
@@ -12,7 +13,7 @@ if M <= 0:
       sys.exit()
 #Checks if user wants a partition
 partition = int(input("Is there a partition? (0 for no, 1 for yes)"))
-if partition != 1 or partition != 0:
+if partition != 1 and partition != 0:
       print "Partition will be set to 0"
 partsize = math.floor(M / 2)
 room=5.0
@@ -26,6 +27,7 @@ ratio=0.0
 C = [[[0.0 for k in range(M)] for j in range(M)] for i in range(M)]  #Makes a 3D array based on M dimensions
 C[0][0][0]=1.0*math.pow(10,21)  #Sets the first element to 1.0e21
 print "Beginning box simulation..."
+start = time.clock()  #Starts timing the diffusion process
 if partition == 1:
       for i in range(0, M):
             for j in range(0, M):
@@ -75,7 +77,9 @@ while (ratio <= 0.99):
                               minval=min(C[i][j][k],minval)  #Checks which of the 2 is smaller
                               sumval+=C[i][j][k]
       ratio=minval/maxval
-      print tacc, " ", ratio, " ", C[0][0][0]
+      #print tacc, " ", ratio, " ", C[0][0][0]
       #print C[M-1][M-1][M-1]
-      print sumval, ratio
+      #print sumval, ratio
+end = (time.clock() - start)  #Gets how long the diffusion process took
 print "Box diffused in ", tacc, " seconds"
+print "CPU time = ", end
