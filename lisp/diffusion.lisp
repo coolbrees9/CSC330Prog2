@@ -47,13 +47,13 @@
       )
 )
 (write-line "Beginning Box simulation...")
-;(print (aref C 0 0 0))
 ;(print minval)
 ;(print dC)
 ;(print diff)
 ;(print tstep)
 ;(print height)
-;(let (wall1 (get-internal-real-time)))
+(let ((cpu1 (get-internal-real-time))  ;Sets current cpu and run time 
+      (run1 (get-internal-run-time)))
 ;Loop that checks when min and max value are equal
 (loop while (<= cuberatio  0.99)  do
       (dotimes (i M)
@@ -134,6 +134,8 @@
       ;(format t "Sum: ~,2d ~%" sumval)
 
 )
-;(let (wall2 (get-internal-real-time)))
+(let ((run2 (get-internal-run-time))
+      (cpu2 (get-internal-real-time)))  ;Gets current cpu time and run time
 (format t "Box diffused in ~,,2d seconds. ~%" tacc)
-;(format t "Wall time =  ~f ~%" (/ (- wall2 wall1) internal-time-units-per-second))
+(format t "CPU time =  ~f ~%" (/ (- cpu2 cpu1) internal-time-units-per-second))  ;Prints cpu time 
+(format t "Run time = ~f ~%" (/ (- run2 run1) internal-time-units-per-second)))) ;Prints run time
